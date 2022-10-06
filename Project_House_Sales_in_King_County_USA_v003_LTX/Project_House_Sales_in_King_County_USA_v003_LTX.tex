@@ -1,0 +1,1881 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+    \usepackage{iftex}
+    \ifPDFTeX
+    	\usepackage[T1]{fontenc}
+    	\usepackage{mathpazo}
+    \else
+    	\usepackage{fontspec}
+    \fi
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{ Data Analysis with Python: House Sales in King County, USA}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+%\[ \large{\textbf{Part II: Supervised ML: Classification of Fungis}} \]
+
+    \hypertarget{stephane-dedieu-august-2022.}{%
+\subparagraph{Stephane DEDIEU, August
+2022.}\label{stephane-dedieu-august-2022.}}
+  
+  %  \hypertarget{stephane-dedieu}
+		%{%
+%\subsubsection{Stephane DEDIEU}\label{stephane-dedieu}}
+
+    Final Assignment for ``IBM Course - Data Analysis with Python'', May
+2nd, 2022. This project is part of IBM Data Science certificate. We
+reviewed it and improved it in August 2022.
+
+Link of interest:
+https://www.opendoor.com/w/blog/factors-that-influence-home-value
+
+    \hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+\hypertarget{business-case}{%
+\subsection{Business Case}\label{business-case}}
+
+The project consists of finding the best model for predicting home
+prices in a county: King County, USA in Washington state, based on a
+dataset of homes sold between May 2014 and May 2015, including prices
+and a set of factors. Based on the literature*, eight critical factors
+influence a home's value.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Neighborhood comps: Recency, Feature Similarity, Distance,
+\item
+  Location: quality of local schools, employment opportunities,
+  proximity to shopping, entertainment, and recreational centers
+\item
+  Home size and usable space
+\item
+  Age and condition
+\item
+  Upgrades and updates
+\item
+  The local market
+\item
+  Economic indicators
+\item
+  Interest rates
+\end{enumerate}
+
+The dataset available, covers most critical factors except ``economic
+ones'' 7 and 8. The local market can somewhat be deduced from an early
+analysis. First we analyze and visualize the data. Second we develop a
+model with several ML predictive methods.
+
+*Reference:
+https://www.opendoor.com/w/blog/factors-that-influence-home-value
+
+    Business understanding Analytic Approach Data Requirements Data
+Collection Data Understanding and Preparation Modeling and Evaluation
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Data collection from open Data base.
+\item
+  Data wrangling.
+\item
+  Exploratory data analysis.
+\item
+  Visual analytics with Folium.
+\item
+  Regression Models development and validations. Selection of best
+  predictive model.
+\end{enumerate}
+
+    \hypertarget{dataset-house-sales-in-king-county-usa}{%
+\subsection{Dataset: House Sales in King County,
+USA}\label{dataset-house-sales-in-king-county-usa}}
+
+    This dataset contains house sale prices for King County, which includes
+Seattle. It includes homes sold between May 2014 and May 2015.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{112}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{IPython} \PY{k+kn}{import} \PY{n}{display}
+\PY{k+kn}{from} \PY{n+nn}{PIL} \PY{k+kn}{import} \PY{n}{Image}
+
+\PY{n}{image} \PY{o}{=} \PY{n}{Image}\PY{o}{.}\PY{n}{open}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{House\PYZus{}features\PYZus{}Table1.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}print(f\PYZdq{}Original size : \PYZob{}image.size\PYZcb{}\PYZdq{}) \PYZsh{} 5464x3640}
+
+\PY{n}{img\PYZus{}resized} \PY{o}{=} \PY{n}{image}\PY{o}{.}\PY{n}{resize}\PY{p}{(}\PY{p}{(}\PY{l+m+mi}{700}\PY{p}{,} \PY{l+m+mi}{600}\PY{p}{)}\PY{p}{)}
+\PY{n}{img\PYZus{}resized}\PY{o}{.}\PY{n}{save}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{House\PYZus{}features\PYZus{}Table1.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{display}\PY{o}{.}\PY{n}{Image}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{House\PYZus{}features\PYZus{}Table1.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+ 
+            
+\prompt{Out}{outcolor}{112}{}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_7_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+
+    \hypertarget{king-county-usa}{%
+\subsection{King County, USA}\label{king-county-usa}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{60}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{image} \PY{o}{=} \PY{n}{Image}\PY{o}{.}\PY{n}{open}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Zip\PYZus{}codes\PYZus{}KingCounty\PYZus{}64.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Original size : }\PY{l+s+si}{\PYZob{}}\PY{n}{image}\PY{o}{.}\PY{n}{size}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{c+c1}{\PYZsh{} 5464x3640}
+\PY{n}{img\PYZus{}resized} \PY{o}{=} \PY{n}{image}\PY{o}{.}\PY{n}{resize}\PY{p}{(}\PY{p}{(}\PY{l+m+mi}{800}\PY{p}{,} \PY{l+m+mi}{500}\PY{p}{)}\PY{p}{)}
+\PY{n}{img\PYZus{}resized}\PY{o}{.}\PY{n}{save}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Zip\PYZus{}codes\PYZus{}KingCounty\PYZus{}64.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{display}\PY{o}{.}\PY{n}{Image}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Zip\PYZus{}codes\PYZus{}KingCounty\PYZus{}64.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Original size : (800, 500)
+    \end{Verbatim}
+ 
+            
+\prompt{Out}{outcolor}{60}{}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_9_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+
+    King county is made up of Seattle and its suburbs to the west and rural
+areas to the east, boarded by the Columbia river. The Zip code is
+expected to have an influence on house prices. Since latitude and
+longitude are part of the data, and may bring additional information
+about home's prices v. location, we will implement interactive maps with
+Folium.
+
+    \hypertarget{required-libraries}{%
+\subsection{Required libraries}\label{required-libraries}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{34}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{IPython}\PY{n+nn}{.}\PY{n+nn}{display} \PY{k+kn}{import} \PY{n}{display}\PY{p}{,} \PY{n}{HTML}
+\PY{n}{display}\PY{p}{(}\PY{n}{HTML}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZlt{}style\PYZgt{}.container }\PY{l+s+s2}{\PYZob{}}\PY{l+s+s2}{ width:90}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{ !important; \PYZcb{}\PYZlt{}/style\PYZgt{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}  For centering figures }
+\PY{k+kn}{from} \PY{n+nn}{IPython}\PY{n+nn}{.}\PY{n+nn}{core}\PY{n+nn}{.}\PY{n+nn}{display} \PY{k+kn}{import} \PY{n}{HTML}
+\PY{n}{HTML}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+s2}{\PYZlt{}style\PYZgt{}}
+\PY{l+s+s2}{.output\PYZus{}png }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{    display: table\PYZhy{}cell;}
+\PY{l+s+s2}{    text\PYZhy{}align: center;}
+\PY{l+s+s2}{    vertical\PYZhy{}align: middle;}
+\PY{l+s+s2}{\PYZcb{}}
+\PY{l+s+s2}{\PYZlt{}/style\PYZgt{}}
+\PY{l+s+s2}{\PYZdq{}\PYZdq{}\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+<IPython.core.display.HTML object>
+    \end{Verbatim}
+
+    
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{34}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+<IPython.core.display.HTML object>
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{61}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{o}{!}pip install webdriver\PYZhy{}manager
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Requirement already satisfied: webdriver-manager in
+c:\textbackslash{}users\textbackslash{}stefo\textbackslash{}anaconda3\textbackslash{}lib\textbackslash{}site-packages (3.8.3)
+Requirement already satisfied: python-dotenv in
+c:\textbackslash{}users\textbackslash{}stefo\textbackslash{}anaconda3\textbackslash{}lib\textbackslash{}site-packages (from webdriver-manager) (0.21.0)
+Requirement already satisfied: requests in c:\textbackslash{}users\textbackslash{}stefo\textbackslash{}anaconda3\textbackslash{}lib\textbackslash{}site-
+packages (from webdriver-manager) (2.28.1)
+Requirement already satisfied: tqdm in c:\textbackslash{}users\textbackslash{}stefo\textbackslash{}anaconda3\textbackslash{}lib\textbackslash{}site-
+packages (from webdriver-manager) (4.62.3)
+Requirement already satisfied: charset-normalizer<3,>=2 in
+c:\textbackslash{}users\textbackslash{}stefo\textbackslash{}anaconda3\textbackslash{}lib\textbackslash{}site-packages (from requests->webdriver-manager)
+(2.0.4)
+Requirement already satisfied: certifi>=2017.4.17 in
+c:\textbackslash{}users\textbackslash{}stefo\textbackslash{}anaconda3\textbackslash{}lib\textbackslash{}site-packages (from requests->webdriver-manager)
+(2022.6.15)
+Requirement already satisfied: idna<4,>=2.5 in
+c:\textbackslash{}users\textbackslash{}stefo\textbackslash{}anaconda3\textbackslash{}lib\textbackslash{}site-packages (from requests->webdriver-manager)
+(3.2)
+Requirement already satisfied: urllib3<1.27,>=1.21.1 in
+c:\textbackslash{}users\textbackslash{}stefo\textbackslash{}anaconda3\textbackslash{}lib\textbackslash{}site-packages (from requests->webdriver-manager)
+(1.26.7)
+Requirement already satisfied: colorama in c:\textbackslash{}users\textbackslash{}stefo\textbackslash{}anaconda3\textbackslash{}lib\textbackslash{}site-
+packages (from tqdm->webdriver-manager) (0.4.4)
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{62}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\PY{o}{\PYZpc{}}\PY{k}{matplotlib} inline
+
+\PY{k+kn}{import} \PY{n+nn}{folium}
+\PY{k+kn}{from} \PY{n+nn}{folium} \PY{k+kn}{import} \PY{n}{plugins}
+\PY{k+kn}{from} \PY{n+nn}{folium}\PY{n+nn}{.}\PY{n+nn}{plugins} \PY{k+kn}{import} \PY{n}{HeatMap}
+\PY{k+kn}{from} \PY{n+nn}{folium}\PY{n+nn}{.}\PY{n+nn}{plugins} \PY{k+kn}{import} \PY{n}{MarkerCluster}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{63}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{seaborn} \PY{k}{as} \PY{n+nn}{sns}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{pipeline} \PY{k+kn}{import} \PY{n}{Pipeline}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{preprocessing} \PY{k+kn}{import} \PY{n}{StandardScaler}\PY{p}{,} \PY{n}{PolynomialFeatures}\PY{p}{,} \PY{n}{SplineTransformer}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{linear\PYZus{}model} \PY{k+kn}{import} \PY{n}{LinearRegression}
+
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{linear\PYZus{}model} \PY{k+kn}{import} \PY{n}{Ridge}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{pipeline} \PY{k+kn}{import} \PY{n}{make\PYZus{}pipeline}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{64}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{io}
+\PY{k+kn}{from} \PY{n+nn}{PIL} \PY{k+kn}{import} \PY{n}{Image}
+\PY{c+c1}{\PYZsh{}!pip install selenium}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{65}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{selenium} \PY{k+kn}{import} \PY{n}{webdriver}
+\PY{k+kn}{import} \PY{n+nn}{os}
+\PY{k+kn}{import} \PY{n+nn}{time}
+\end{Verbatim}
+\end{tcolorbox}
+
+    from webdriver\_manager.firefox import GeckoDriverManager \# Code 2
+driver =
+webdriver.Firefox(executable\_path=GeckoDriverManager().install()) \#
+Code 3
+
+    from selenium import webdriver from webdriver\_manager.firefox import
+GeckoDriverManager
+
+driver =
+webdriver.Firefox(executable\_path=GeckoDriverManager().install())
+
+driver.get(``http://www.python.org'')
+
+driver.close()
+
+    \hypertarget{importing-data-sets}{%
+\section{Importing Data Sets}\label{importing-data-sets}}
+
+    Load the csv file:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{66}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{file\PYZus{}name}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{https://cf\PYZhy{}courses\PYZhy{}data.s3.us.cloud\PYZhy{}object\PYZhy{}storage.appdomain.cloud/IBMDeveloperSkillsNetwork\PYZhy{}DA0101EN\PYZhy{}SkillsNetwork/labs/FinalModule\PYZus{}Coursera/data/kc\PYZus{}house\PYZus{}data\PYZus{}NaN.csv}\PY{l+s+s1}{\PYZsq{}}
+\PY{n}{df}\PY{o}{=}\PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{n}{file\PYZus{}name}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{67}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+\tiny
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{67}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   Unnamed: 0          id             date     price  bedrooms  bathrooms  \textbackslash{}
+0           0  7129300520  20141013T000000  221900.0       3.0       1.00
+1           1  6414100192  20141209T000000  538000.0       3.0       2.25
+2           2  5631500400  20150225T000000  180000.0       2.0       1.00
+3           3  2487200875  20141209T000000  604000.0       4.0       3.00
+4           4  1954400510  20150218T000000  510000.0       3.0       2.00
+
+   sqft\_living  sqft\_lot  floors  waterfront  {\ldots}  grade  sqft\_above  \textbackslash{}
+0         1180      5650     1.0           0  {\ldots}      7        1180
+1         2570      7242     2.0           0  {\ldots}      7        2170
+2          770     10000     1.0           0  {\ldots}      6         770
+3         1960      5000     1.0           0  {\ldots}      7        1050
+4         1680      8080     1.0           0  {\ldots}      8        1680
+
+   sqft\_basement  yr\_built  yr\_renovated  zipcode      lat     long  \textbackslash{}
+0              0      1955             0    98178  47.5112 -122.257
+1            400      1951          1991    98125  47.7210 -122.319
+2              0      1933             0    98028  47.7379 -122.233
+3            910      1965             0    98136  47.5208 -122.393
+4              0      1987             0    98074  47.6168 -122.045
+
+   sqft\_living15  sqft\_lot15
+0           1340        5650
+1           1690        7639
+2           2720        8062
+3           1360        5000
+4           1800        7503
+
+[5 rows x 22 columns]
+\end{Verbatim}
+\end{tcolorbox}
+\normalsize
+
+        
+    \hypertarget{data-types}{%
+\subsubsection{Data types}\label{data-types}}
+
+
+Display the data types of each column using the function dtypes, then
+take a screenshot and submit it, include your code in the image.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{68}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{df}\PY{o}{.}\PY{n}{dtypes}
+\end{Verbatim}
+\end{tcolorbox}
+\footnotesize
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{68}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+Unnamed: 0         int64
+id                 int64
+date              object
+price            float64
+bedrooms         float64
+bathrooms        float64
+sqft\_living        int64
+sqft\_lot           int64
+floors           float64
+waterfront         int64
+view               int64
+condition          int64
+grade              int64
+sqft\_above         int64
+sqft\_basement      int64
+yr\_built           int64
+yr\_renovated       int64
+zipcode            int64
+lat              float64
+long             float64
+sqft\_living15      int64
+sqft\_lot15         int64
+dtype: object
+\end{Verbatim}
+\end{tcolorbox}
+\normalsize       
+    We use the method ``describe'' to obtain a statistical summary of the
+dataframe.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{69}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{df}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+\tiny
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{69}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+        Unnamed: 0            id         price      bedrooms     bathrooms  \textbackslash{}
+count  21613.00000  2.161300e+04  2.161300e+04  21600.000000  21603.000000
+mean   10806.00000  4.580302e+09  5.400881e+05      3.372870      2.115736
+std     6239.28002  2.876566e+09  3.671272e+05      0.926657      0.768996
+min        0.00000  1.000102e+06  7.500000e+04      1.000000      0.500000
+25\%     5403.00000  2.123049e+09  3.219500e+05      3.000000      1.750000
+50\%    10806.00000  3.904930e+09  4.500000e+05      3.000000      2.250000
+75\%    16209.00000  7.308900e+09  6.450000e+05      4.000000      2.500000
+max    21612.00000  9.900000e+09  7.700000e+06     33.000000      8.000000
+
+        sqft\_living      sqft\_lot        floors    waterfront          view  \textbackslash{}
+count  21613.000000  2.161300e+04  21613.000000  21613.000000  21613.000000
+mean    2079.899736  1.510697e+04      1.494309      0.007542      0.234303
+std      918.440897  4.142051e+04      0.539989      0.086517      0.766318
+min      290.000000  5.200000e+02      1.000000      0.000000      0.000000
+25\%     1427.000000  5.040000e+03      1.000000      0.000000      0.000000
+50\%     1910.000000  7.618000e+03      1.500000      0.000000      0.000000
+75\%     2550.000000  1.068800e+04      2.000000      0.000000      0.000000
+max    13540.000000  1.651359e+06      3.500000      1.000000      4.000000
+
+       {\ldots}         grade    sqft\_above  sqft\_basement      yr\_built  \textbackslash{}
+count  {\ldots}  21613.000000  21613.000000   21613.000000  21613.000000
+mean   {\ldots}      7.656873   1788.390691     291.509045   1971.005136
+std    {\ldots}      1.175459    828.090978     442.575043     29.373411
+min    {\ldots}      1.000000    290.000000       0.000000   1900.000000
+25\%    {\ldots}      7.000000   1190.000000       0.000000   1951.000000
+50\%    {\ldots}      7.000000   1560.000000       0.000000   1975.000000
+75\%    {\ldots}      8.000000   2210.000000     560.000000   1997.000000
+max    {\ldots}     13.000000   9410.000000    4820.000000   2015.000000
+
+       yr\_renovated       zipcode           lat          long  sqft\_living15  \textbackslash{}
+count  21613.000000  21613.000000  21613.000000  21613.000000   21613.000000
+mean      84.402258  98077.939805     47.560053   -122.213896    1986.552492
+std      401.679240     53.505026      0.138564      0.140828     685.391304
+min        0.000000  98001.000000     47.155900   -122.519000     399.000000
+25\%        0.000000  98033.000000     47.471000   -122.328000    1490.000000
+50\%        0.000000  98065.000000     47.571800   -122.230000    1840.000000
+75\%        0.000000  98118.000000     47.678000   -122.125000    2360.000000
+max     2015.000000  98199.000000     47.777600   -121.315000    6210.000000
+
+          sqft\_lot15
+count   21613.000000
+mean    12768.455652
+std     27304.179631
+min       651.000000
+25\%      5100.000000
+50\%      7620.000000
+75\%     10083.000000
+max    871200.000000
+
+[8 rows x 21 columns]
+\end{Verbatim}
+\end{tcolorbox}
+\normalsize       
+    \hypertarget{data-wrangling}{%
+\section{Data Wrangling}\label{data-wrangling}}
+
+    \hypertarget{cleaning-the-dataframe}{%
+\subsubsection{Cleaning the dataframe}\label{cleaning-the-dataframe}}
+
+Drop the columns ``id'' and ``Unnamed: 0'' from axis 1 using the method
+drop(), then use the method describe() to obtain a statistical summary
+of the data. Take a screenshot and submit it, make sure the inplace
+parameter is set to True
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{70}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Unnamed: 0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{inplace}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\PY{n}{df}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+\tiny
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{70}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+              price      bedrooms     bathrooms   sqft\_living      sqft\_lot  \textbackslash{}
+count  2.161300e+04  21600.000000  21603.000000  21613.000000  2.161300e+04
+mean   5.400881e+05      3.372870      2.115736   2079.899736  1.510697e+04
+std    3.671272e+05      0.926657      0.768996    918.440897  4.142051e+04
+min    7.500000e+04      1.000000      0.500000    290.000000  5.200000e+02
+25\%    3.219500e+05      3.000000      1.750000   1427.000000  5.040000e+03
+50\%    4.500000e+05      3.000000      2.250000   1910.000000  7.618000e+03
+75\%    6.450000e+05      4.000000      2.500000   2550.000000  1.068800e+04
+max    7.700000e+06     33.000000      8.000000  13540.000000  1.651359e+06
+
+             floors    waterfront          view     condition         grade  \textbackslash{}
+count  21613.000000  21613.000000  21613.000000  21613.000000  21613.000000
+mean       1.494309      0.007542      0.234303      3.409430      7.656873
+std        0.539989      0.086517      0.766318      0.650743      1.175459
+min        1.000000      0.000000      0.000000      1.000000      1.000000
+25\%        1.000000      0.000000      0.000000      3.000000      7.000000
+50\%        1.500000      0.000000      0.000000      3.000000      7.000000
+75\%        2.000000      0.000000      0.000000      4.000000      8.000000
+max        3.500000      1.000000      4.000000      5.000000     13.000000
+
+         sqft\_above  sqft\_basement      yr\_built  yr\_renovated       zipcode  \textbackslash{}
+count  21613.000000   21613.000000  21613.000000  21613.000000  21613.000000
+mean    1788.390691     291.509045   1971.005136     84.402258  98077.939805
+std      828.090978     442.575043     29.373411    401.679240     53.505026
+min      290.000000       0.000000   1900.000000      0.000000  98001.000000
+25\%     1190.000000       0.000000   1951.000000      0.000000  98033.000000
+50\%     1560.000000       0.000000   1975.000000      0.000000  98065.000000
+75\%     2210.000000     560.000000   1997.000000      0.000000  98118.000000
+max     9410.000000    4820.000000   2015.000000   2015.000000  98199.000000
+
+                lat          long  sqft\_living15     sqft\_lot15
+count  21613.000000  21613.000000   21613.000000   21613.000000
+mean      47.560053   -122.213896    1986.552492   12768.455652
+std        0.138564      0.140828     685.391304   27304.179631
+min       47.155900   -122.519000     399.000000     651.000000
+25\%       47.471000   -122.328000    1490.000000    5100.000000
+50\%       47.571800   -122.230000    1840.000000    7620.000000
+75\%       47.678000   -122.125000    2360.000000   10083.000000
+max       47.777600   -121.315000    6210.000000  871200.000000
+\end{Verbatim}
+\end{tcolorbox}
+\normalsize
+     
+    Based on ``count'', the maximum number of houses and records is 21613.
+If information is available for most features, there are missing values
+in ``bedroom'' and ``bathrooms''. Respectively, only 21600 and 21603
+values. Instead of 21613. We replace missing values and replace them
+with the mean value in each column.
+
+    \hypertarget{detect-and-replace-missing-values}{%
+\subsubsection{Detect and replace missing
+values}\label{detect-and-replace-missing-values}}
+
+    We can see we have missing values for the columns bedrooms and bathrooms
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{71}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{number of NaN values for the column bedrooms :}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bedrooms}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{isnull}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{number of NaN values for the column bathrooms :}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bathrooms}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{isnull}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+number of NaN values for the column bedrooms : 13
+number of NaN values for the column bathrooms : 10
+    \end{Verbatim}
+
+    We can replace the missing values of the column `bedrooms' with the mean
+of the column `bedrooms' using the method replace(). Don't forget to set
+the inplace parameter to True
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{72}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{meanBed}\PY{o}{=}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bedrooms}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{p}{)}
+\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bedrooms}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{replace}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{nan}\PY{p}{,} \PY{n}{meanBed}\PY{p}{,} \PY{n}{inplace}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    We also replace the missing values of the column `bathrooms' with the
+mean of the column `bathrooms' using the method replace(). Don't forget
+to set the inplace parameter top True
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{73}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{meanBath}\PY{o}{=}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bathrooms}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{p}{)}
+\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bathrooms}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{replace}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{nan}\PY{p}{,} \PY{n}{meanBath}\PY{p}{,} \PY{n}{inplace}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{74}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{number of NaN values for the column bedrooms :}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bedrooms}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{isnull}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{number of NaN values for the column bathrooms :}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bathrooms}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{isnull}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+number of NaN values for the column bedrooms : 0
+number of NaN values for the column bathrooms : 0
+    \end{Verbatim}
+
+    \hypertarget{exploratory-data-analysis-eda}{%
+\section{Exploratory Data Analysis
+(EDA)}\label{exploratory-data-analysis-eda}}
+
+    \hypertarget{number-of-houses-with-unique-floor-values}{%
+\subsection{Number of houses with unique floor
+values}\label{number-of-houses-with-unique-floor-values}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{75}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{dfloor}\PY{o}{=}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{floors}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}
+\PY{n}{df\PYZus{}floors\PYZus{}counts} \PY{o}{=} \PY{n}{dfloor}\PY{o}{.}\PY{n}{to\PYZus{}frame}\PY{p}{(}\PY{p}{)}
+\PY{n}{df\PYZus{}floors\PYZus{}counts} \PY{o}{=} \PY{n}{df\PYZus{}floors\PYZus{}counts}\PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{p}{)}
+\PY{n}{df\PYZus{}floors\PYZus{}counts}\PY{o}{.}\PY{n}{columns} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Number of floors}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Counts of houses}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{c+c1}{\PYZsh{} change column names}
+\PY{n}{df\PYZus{}floors\PYZus{}counts}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{75}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   Number of floors  Counts of houses
+0               1.0             10680
+1               2.0              8241
+2               1.5              1910
+3               3.0               613
+4               2.5               161
+5               3.5                 8
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \hypertarget{home-price-outliers}{%
+\subsection{Home price outliers}\label{home-price-outliers}}
+
+Use the function boxplot in the seaborn library to determine whether
+houses with a waterfront view or without a waterfront view have more
+price outliers.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{76}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{sns}\PY{o}{.}\PY{n}{set\PYZus{}style}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ticks}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{axes.grid}\PY{l+s+s1}{\PYZsq{}} \PY{p}{:} \PY{k+kc}{True}\PY{p}{\PYZcb{}}\PY{p}{)}
+\PY{n}{sns}\PY{o}{.}\PY{n}{set}\PY{p}{(}\PY{n}{font\PYZus{}scale} \PY{o}{=} \PY{l+m+mf}{1.25}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{9}\PY{p}{,}\PY{l+m+mi}{4}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ticklabel\PYZus{}format}\PY{p}{(}\PY{n}{style}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{plain}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{p}\PY{o}{=}\PY{n}{sns}\PY{o}{.}\PY{n}{boxplot}\PY{p}{(}\PY{n}{x}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{waterfront}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{price}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{data}\PY{o}{=}\PY{n}{df}\PY{p}{,} \PY{n}{palette}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Set3}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{p}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{price US\PYZdl{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{76}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+Text(0, 0.5, 'price US\$')
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_44_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{77}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{d\PYZus{}wf}\PY{o}{=}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{waterfront}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}
+\PY{n}{d\PYZus{}wf\PYZus{}counts} \PY{o}{=} \PY{n}{d\PYZus{}wf}\PY{o}{.}\PY{n}{to\PYZus{}frame}\PY{p}{(}\PY{p}{)}
+\PY{n}{d\PYZus{}wf\PYZus{}counts} \PY{o}{=} \PY{n}{d\PYZus{}wf\PYZus{}counts}\PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{p}{)}
+\PY{n}{d\PYZus{}wf\PYZus{}counts}\PY{o}{.}\PY{n}{columns} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Waterfront}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Counts of houses}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{c+c1}{\PYZsh{} change column names}
+\PY{n}{d\PYZus{}wf\PYZus{}counts}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{77}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   Waterfront  Counts of houses
+0           0             21450
+1           1               163
+\end{Verbatim}
+\end{tcolorbox}
+        
+    { Houses without a waterfront view have more price outliers. But the
+number of waterfront houses is low, and this criteria may not be
+significant. }
+
+    \hypertarget{correlation-sqft_above-with-price.}{%
+\subsection{Correlation sqft\_above with
+price.}\label{correlation-sqft_above-with-price.}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{78}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} we compute LinearRegression separately and will plot the regression line. }
+\PY{n}{X}\PY{o}{=}\PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{sqft\PYZus{}above}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{to\PYZus{}numpy}\PY{p}{(}\PY{p}{)}
+\PY{n}{X}\PY{o}{=}\PY{n}{X}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}
+\PY{n}{Y}\PY{o}{=}\PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{price}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{to\PYZus{}numpy}\PY{p}{(}\PY{p}{)}
+\PY{n}{reg} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{Y}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}print(reg.coef\PYZus{}, reg.intercept\PYZus{})}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R}\PY{l+s+se}{\PYZbs{}N\PYZob{}SUPERSCRIPT TWO\PYZcb{}}\PY{l+s+s2}{=}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{reg}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{Y}\PY{p}{)}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}import matplotlib.pyplot as plt}
+\PY{n}{sns}\PY{o}{.}\PY{n}{set\PYZus{}style}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ticks}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{axes.grid}\PY{l+s+s1}{\PYZsq{}} \PY{p}{:} \PY{k+kc}{True}\PY{p}{\PYZcb{}}\PY{p}{)}
+\PY{n}{sns}\PY{o}{.}\PY{n}{set\PYZus{}theme}\PY{p}{(}\PY{n}{color\PYZus{}codes}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{sns}\PY{o}{.}\PY{n}{set}\PY{p}{(}\PY{n}{font\PYZus{}scale} \PY{o}{=} \PY{l+m+mf}{1.25}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{9}\PY{p}{,}\PY{l+m+mi}{4}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ticklabel\PYZus{}format}\PY{p}{(}\PY{n}{style}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{plain}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+
+\PY{c+c1}{\PYZsh{}p=sns.regplot(x=\PYZdq{}sqft\PYZus{}above\PYZdq{}, y=\PYZdq{}price\PYZdq{}, data=df, order=1, marker=\PYZdq{}+\PYZdq{}, color=\PYZdq{}g\PYZdq{})}
+\PY{n}{p}\PY{o}{=}\PY{n}{sns}\PY{o}{.}\PY{n}{regplot}\PY{p}{(}\PY{n}{x}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{sqft\PYZus{}above}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{price}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{data}\PY{o}{=}\PY{n}{df}\PY{p}{,} \PY{n}{order}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{g}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{reg}\PY{o}{.}\PY{n}{coef\PYZus{}}\PY{o}{*}\PY{n}{X} \PY{o}{+} \PY{n}{reg}\PY{o}{.}\PY{n}{intercept\PYZus{}}\PY{p}{,}  \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{b}\PY{l+s+s2}{\PYZdq{}}    \PY{p}{)}                                                                          
+\PY{n}{p}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{sqft\PYZus{}above}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{p}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{price US\PYZdl{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+R²= 0.3667117528382794
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{78}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+Text(0, 0.5, 'price US\$')
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_48_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    { Based on the positive slope of the linear regression line, feature
+`sqft\_above' is positively correlated with price. Meaning home value
+increases with sqft, which is pretty ``intuitive'', but not the single
+factor. }
+
+    \hypertarget{price-v.-features.-correlation-table.}{%
+\subsection{Price v. features. Correlation
+table.}\label{price-v.-features.-correlation-table.}}
+
+We can use the Pandas method corr() to find the feature other than price
+that is most correlated with price.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{79}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{df}\PY{o}{.}\PY{n}{corr}\PY{p}{(}\PY{p}{)}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{price}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{79}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+zipcode         -0.053203
+long             0.021626
+condition        0.036362
+yr\_built         0.054012
+sqft\_lot15       0.082447
+sqft\_lot         0.089661
+yr\_renovated     0.126434
+floors           0.256794
+waterfront       0.266369
+lat              0.307003
+bedrooms         0.308797
+sqft\_basement    0.323816
+view             0.397293
+bathrooms        0.525738
+sqft\_living15    0.585379
+sqft\_above       0.605567
+grade            0.667434
+sqft\_living      0.702035
+price            1.000000
+Name: price, dtype: float64
+\end{Verbatim}
+\end{tcolorbox}
+        
+    Most features are positively correlated with price, including
+sqft\_above, which confirms the previous results. Nevertheless,
+correlation is weak for many features: after ``floors'', correlation
+drops significantly. Particularly longitude and ZipCode don't seem to
+have an impact on prices, when we would expect to find inexpensive homes
+in rural areas. \\
+We investigate homes prices v. location with interactive maps.
+
+    \hypertarget{visual-analytics-with-folium}{%
+\section{Visual analytics with
+Folium}\label{visual-analytics-with-folium}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{80}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Import folium MarkerCluster plugin}
+\PY{k+kn}{from} \PY{n+nn}{folium}\PY{n+nn}{.}\PY{n+nn}{plugins} \PY{k+kn}{import} \PY{n}{MarkerCluster}
+\PY{c+c1}{\PYZsh{} Import folium MousePosition plugin}
+\PY{k+kn}{from} \PY{n+nn}{folium}\PY{n+nn}{.}\PY{n+nn}{plugins} \PY{k+kn}{import} \PY{n}{MousePosition}
+\PY{c+c1}{\PYZsh{} Import folium DivIcon plugin}
+\PY{k+kn}{from} \PY{n+nn}{folium}\PY{n+nn}{.}\PY{n+nn}{features} \PY{k+kn}{import} \PY{n}{DivIcon}
+\PY{c+c1}{\PYZsh{}import folium}
+\PY{k+kn}{import} \PY{n+nn}{webbrowser}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Interactive maps will show homes location the dataset. By clicking on
+markers whose colors depends on prices from yellow(low) to red (high),
+price and sqft will be displayed. Zoom can be used for more accurate
+price v. location analysis.
+
+    Most houses in the dataset are located west of King County, in a
+vertical corridor along the coast: Seattle and suburbs (greater Seattle
+area, GSA?). Therefore longitude does not have a strong impact on
+prices. Latitude is a more important features. Let's examine if most
+expensive houses and least expensive houses prices, resp. with prices
+above the 95\% and below the 5\% quantiles, defines specific areas of
+the GSA.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{81}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{price95}\PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{price}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{quantile}\PY{p}{(}\PY{l+m+mf}{0.95}\PY{p}{)}
+\PY{n}{price5}\PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{price}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{quantile}\PY{p}{(}\PY{l+m+mf}{0.05}\PY{p}{)}
+
+\PY{n}{np}\PY{o}{.}\PY{n}{floor}\PY{p}{(}\PY{n}{price5}\PY{p}{)}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{floor}\PY{p}{(}\PY{n}{price95}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{81}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+(210000.0, 1156479.0)
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \hypertarget{most-expensive-houses}{%
+\subsection{Most expensive houses}\label{most-expensive-houses}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{82}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Seattle location = [47.65, \PYZhy{}122.0]}
+
+\PY{c+c1}{\PYZsh{} top home prices  \PYZgt{} 95\PYZpc{}}
+\PY{c+c1}{\PYZsh{} make a dataframe with the quantile}
+\PY{n}{expensive\PYZus{}homes} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{price}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{n}{price95}\PY{p}{)}\PY{p}{]}
+\PY{c+c1}{\PYZsh{}\PYZsh{}print(expensive\PYZus{}homes.head())}
+\PY{c+c1}{\PYZsh{}\PYZhy{}\PYZhy{}\PYZhy{}}
+\PY{n}{f} \PY{o}{=} \PY{n}{folium}\PY{o}{.}\PY{n}{Figure}\PY{p}{(}\PY{n}{width}\PY{o}{=}\PY{l+m+mi}{1000}\PY{p}{,} \PY{n}{height}\PY{o}{=}\PY{l+m+mi}{500}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}\PYZhy{}\PYZhy{}\PYZhy{}}
+\PY{n}{expensive\PYZus{}homes\PYZus{}map} \PY{o}{=} \PY{n}{folium}\PY{o}{.}\PY{n}{Map}\PY{p}{(}\PY{n}{location}\PY{o}{=}\PY{p}{[}\PY{l+m+mf}{47.65}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mf}{122.0}\PY{p}{]}\PY{p}{,} \PY{n}{zoom\PYZus{}start}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,} \PY{n}{tiles}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{openstreetmap}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{add\PYZus{}to}\PY{p}{(}\PY{n}{f}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{}\PYZhy{}\PYZhy{} for proper indexing... }
+\PY{n}{df1} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{marker\PYZus{}color}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+\PY{n}{expensive\PYZus{}homes} \PY{o}{=} \PY{n}{expensive\PYZus{}homes}\PY{o}{.}\PY{n}{join}\PY{p}{(}\PY{n}{df1}\PY{p}{,} \PY{n}{how}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{outer}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}print(expensive\PYZus{}homes.head())}
+\PY{c+c1}{\PYZsh{}expensive\PYZus{}homes[\PYZdq{}marker\PYZus{}color\PYZdq{}]= pd.cut(x= expensive\PYZus{}homes[\PYZdq{}price\PYZdq{}], bins=4, labels=[\PYZsq{}yellow\PYZsq{}, \PYZsq{}green\PYZsq{}, \PYZsq{}blue\PYZsq{}, \PYZsq{}red\PYZsq{}])}
+\PY{n}{expensive\PYZus{}homes}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{marker\PYZus{}color}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{cut}\PY{p}{(}\PY{n}{x}\PY{o}{=} \PY{n}{expensive\PYZus{}homes}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{price}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{bins}\PY{o}{=}\PY{l+m+mi}{4}\PY{p}{,} \PY{n}{labels}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{magenta}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{brown}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{purple}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+
+
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{expensive\PYZus{}homes}\PY{o}{.}\PY{n}{index}\PY{p}{:}
+    \PY{n}{lat} \PY{o}{=} \PY{n}{expensive\PYZus{}homes}\PY{o}{.}\PY{n}{lat}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+    \PY{n}{long} \PY{o}{=} \PY{n}{expensive\PYZus{}homes}\PY{o}{.}\PY{n}{long}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+    \PY{n}{price} \PY{o}{=} \PY{n}{expensive\PYZus{}homes}\PY{o}{.}\PY{n}{price}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+    \PY{n}{sqft\PYZus{}living} \PY{o}{=} \PY{n}{expensive\PYZus{}homes}\PY{o}{.}\PY{n}{sqft\PYZus{}living}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+    \PY{n}{color\PYZus{}mark}\PY{o}{=}\PY{n}{expensive\PYZus{}homes}\PY{o}{.}\PY{n}{marker\PYZus{}color}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+    \PY{c+c1}{\PYZsh{}marker = folium.Marker([lat, long]).add\PYZus{}to(expensive\PYZus{}homes\PYZus{}map)}
+    \PY{n}{popup\PYZus{}text} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Price \PYZdl{}: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{ , Sqft: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{price}\PY{p}{,}\PY{n}{sqft\PYZus{}living}\PY{p}{)}
+    \PY{n}{popup} \PY{o}{=} \PY{n}{folium}\PY{o}{.}\PY{n}{Popup}\PY{p}{(}\PY{n}{popup\PYZus{}text}\PY{p}{,} \PY{n}{parse\PYZus{}html}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+   \PY{c+c1}{\PYZsh{} marker = folium.Marker([lat, long], radius=15, color=color\PYZus{}exp , popup=popup).add\PYZus{}to(expensive\PYZus{}homes\PYZus{}map)}
+    \PY{n}{folium}\PY{o}{.}\PY{n}{CircleMarker}\PY{p}{(}\PY{p}{[}\PY{n}{lat}\PY{p}{,}\PY{n}{long}\PY{p}{]}\PY{p}{,}  \PY{n}{radius}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{color}\PY{o}{=} \PY{n}{color\PYZus{}mark}\PY{p}{,} \PY{n}{popup}\PY{o}{=}\PY{n}{popup}\PY{p}{)}\PY{o}{.}\PY{n}{add\PYZus{}to}\PY{p}{(}\PY{n}{expensive\PYZus{}homes\PYZus{}map}\PY{p}{)}
+             \PY{c+c1}{\PYZsh{}       radius=15, color=expensive\PYZus{}homes[\PYZsq{}marker\PYZus{}color\PYZsq{}]).add\PYZus{}to(expensive\PYZus{}homes\PYZus{}map)}
+
+        
+
+\PY{c+c1}{\PYZsh{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}}
+\PY{c+c1}{\PYZsh{} THE FOLLOWING INSTRUCTION DISPLAYS THE INTERACTIVE MAP... that will not show up when exporting the notebook to LateX ! }
+\PY{c+c1}{\PYZsh{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}}
+\PY{c+c1}{\PYZsh{}expensive\PYZus{}homes\PYZus{}map}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{83}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}}
+\PY{c+c1}{\PYZsh{} THIS SET OF INSTRUCTIONS IS INTENDED TO SAVE FOLIUM MAP as an Image. For LaTeX and build a nice PDF report.}
+\PY{c+c1}{\PYZsh{} Interactivity is LOST ! }
+\PY{c+c1}{\PYZsh{} \PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}}
+\PY{c+c1}{\PYZsh{} save the map as html}
+\PY{n}{mapFname} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{expensive\PYZus{}homes\PYZus{}map\PYZus{}output.html}\PY{l+s+s1}{\PYZsq{}}
+\PY{n}{expensive\PYZus{}homes\PYZus{}map}\PY{o}{.}\PY{n}{save}\PY{p}{(}\PY{n}{mapFname}\PY{p}{)}
+\PY{n}{mapUrl} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{file://}\PY{l+s+si}{\PYZob{}0\PYZcb{}}\PY{l+s+s1}{/}\PY{l+s+si}{\PYZob{}1\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{os}\PY{o}{.}\PY{n}{getcwd}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{n}{mapFname}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} download gecko driver for firefox from here \PYZhy{} https://github.com/mozilla/geckodriver/releases}
+\PY{c+c1}{\PYZsh{} use selenium to save the html as png image}
+\PY{n}{driver} \PY{o}{=} \PY{n}{webdriver}\PY{o}{.}\PY{n}{Firefox}\PY{p}{(}\PY{p}{)}
+\PY{n}{driver}\PY{o}{.}\PY{n}{get}\PY{p}{(}\PY{n}{mapUrl}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} wait for 5 seconds for the maps and other assets to be loaded in the browser}
+\PY{n}{time}\PY{o}{.}\PY{n}{sleep}\PY{p}{(}\PY{l+m+mi}{5}\PY{p}{)}
+\PY{n}{driver}\PY{o}{.}\PY{n}{save\PYZus{}screenshot}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{expensive\PYZus{}homes\PYZus{}map.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{driver}\PY{o}{.}\PY{n}{quit}\PY{p}{(}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}}
+\PY{n}{display}\PY{o}{.}\PY{n}{Image}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{expensive\PYZus{}homes\PYZus{}map.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+ 
+            
+\prompt{Out}{outcolor}{83}{}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_60_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+
+    Location is an important feature, most expensive homes are located on a
+waterfront either the ocean or a lake.
+
+    \hypertarget{least-expensive-houses}{%
+\subsection{Least expensive houses}\label{least-expensive-houses}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{84}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} lower prices \PYZlt{} 5\PYZpc{}}
+\PY{c+c1}{\PYZsh{} make a dataframe with the quantile}
+\PY{n}{inexpensive\PYZus{}homes} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{price}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{price5}\PY{p}{)}\PY{p}{]}
+\PY{n}{inexpensive\PYZus{}homes}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} make a dataframe with the quantile}
+\PY{n}{inexpensive\PYZus{}homes} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{price}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{price5}\PY{p}{)}\PY{p}{]}
+\PY{c+c1}{\PYZsh{}inexpensive\PYZus{}homes.head()}
+
+\PY{n}{f} \PY{o}{=} \PY{n}{folium}\PY{o}{.}\PY{n}{Figure}\PY{p}{(}\PY{n}{width}\PY{o}{=}\PY{l+m+mi}{1000}\PY{p}{,} \PY{n}{height}\PY{o}{=}\PY{l+m+mi}{500}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}\PYZhy{}\PYZhy{}\PYZhy{}}
+\PY{n}{inexpensive\PYZus{}homes\PYZus{}map} \PY{o}{=} \PY{n}{folium}\PY{o}{.}\PY{n}{Map}\PY{p}{(}\PY{n}{location}\PY{o}{=}\PY{p}{[}\PY{l+m+mf}{47.65}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mf}{122.0}\PY{p}{]}\PY{p}{,} \PY{n}{zoom\PYZus{}start}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,} \PY{n}{tiles}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{openstreetmap}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{add\PYZus{}to}\PY{p}{(}\PY{n}{f}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{}\PYZhy{}\PYZhy{} for proper indexing... }
+\PY{n}{df1} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{marker\PYZus{}color}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+\PY{n}{inexpensive\PYZus{}homes} \PY{o}{=} \PY{n}{inexpensive\PYZus{}homes}\PY{o}{.}\PY{n}{join}\PY{p}{(}\PY{n}{df1}\PY{p}{,} \PY{n}{how}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{outer}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}print(expensive\PYZus{}homes.head())}
+\PY{c+c1}{\PYZsh{}inexpensive\PYZus{}homes[\PYZdq{}marker\PYZus{}color\PYZdq{}]= pd.cut(x= inexpensive\PYZus{}homes[\PYZdq{}price\PYZdq{}], bins=4, labels=[\PYZsq{}yellow\PYZsq{}, \PYZsq{}green\PYZsq{}, \PYZsq{}blue\PYZsq{}, \PYZsq{}red\PYZsq{}])}
+\PY{n}{inexpensive\PYZus{}homes}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{marker\PYZus{}color}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{cut}\PY{p}{(}\PY{n}{x}\PY{o}{=} \PY{n}{inexpensive\PYZus{}homes}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{price}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{bins}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{labels}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{yellow}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{green}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cyan}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+
+
+
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{inexpensive\PYZus{}homes}\PY{o}{.}\PY{n}{index}\PY{p}{:}
+    \PY{n}{lat} \PY{o}{=} \PY{n}{inexpensive\PYZus{}homes}\PY{o}{.}\PY{n}{lat}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+    \PY{n}{long} \PY{o}{=} \PY{n}{inexpensive\PYZus{}homes}\PY{o}{.}\PY{n}{long}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+    \PY{n}{price} \PY{o}{=} \PY{n}{inexpensive\PYZus{}homes}\PY{o}{.}\PY{n}{price}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+    \PY{n}{sqft\PYZus{}living} \PY{o}{=} \PY{n}{inexpensive\PYZus{}homes}\PY{o}{.}\PY{n}{sqft\PYZus{}living}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+    \PY{n}{color\PYZus{}exp}\PY{o}{=}\PY{n}{inexpensive\PYZus{}homes}\PY{o}{.}\PY{n}{marker\PYZus{}color}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+    \PY{c+c1}{\PYZsh{}marker = folium.Marker([lat, long]).add\PYZus{}to(expensive\PYZus{}map)}
+    \PY{n}{popup\PYZus{}text} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Price \PYZdl{}: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{ , Sqft: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{price}\PY{p}{,}\PY{n}{sqft\PYZus{}living}\PY{p}{)}
+    \PY{n}{popup} \PY{o}{=} \PY{n}{folium}\PY{o}{.}\PY{n}{Popup}\PY{p}{(}\PY{n}{popup\PYZus{}text}\PY{p}{,} \PY{n}{parse\PYZus{}html}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+   \PY{c+c1}{\PYZsh{} marker = folium.Marker([lat, long], radius=15, color=color\PYZus{}exp , popup=popup).add\PYZus{}to(expensive\PYZus{}map)}
+    \PY{n}{folium}\PY{o}{.}\PY{n}{CircleMarker}\PY{p}{(}\PY{p}{[}\PY{n}{lat}\PY{p}{,}\PY{n}{long}\PY{p}{]}\PY{p}{,}  \PY{n}{radius}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{color}\PY{o}{=} \PY{n}{color\PYZus{}exp}\PY{p}{,} \PY{n}{popup}\PY{o}{=}\PY{n}{popup}\PY{p}{)}\PY{o}{.}\PY{n}{add\PYZus{}to}\PY{p}{(}\PY{n}{inexpensive\PYZus{}homes\PYZus{}map}\PY{p}{)}
+             \PY{c+c1}{\PYZsh{}       radius=15, color=expensive[\PYZsq{}marker\PYZus{}color\PYZsq{}]).add\PYZus{}to(expensive\PYZus{}map)}
+        
+\PY{c+c1}{\PYZsh{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}}
+\PY{c+c1}{\PYZsh{} THE FOLLOWING INSTRUCTION DISPLAYS THE INTERACTIVE MAP... that will not show up when exporting the notebook to LateX ! }
+\PY{c+c1}{\PYZsh{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}}
+\PY{c+c1}{\PYZsh{}inexpensive\PYZus{}homes\PYZus{}map}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{85}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}}
+\PY{c+c1}{\PYZsh{} THIS SET OF INSTRUCTIONS IS INTENDED TO SAVE the FOLIUM MAP as an Image. For LaTeX and build a nice PDF report.}
+\PY{c+c1}{\PYZsh{} Interactivity is LOST ! }
+\PY{c+c1}{\PYZsh{} \PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}}
+\PY{c+c1}{\PYZsh{} save the map as html}
+\PY{n}{mapFname} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{inexpensive\PYZus{}homes\PYZus{}map\PYZus{}output.html}\PY{l+s+s1}{\PYZsq{}}
+\PY{n}{inexpensive\PYZus{}homes\PYZus{}map}\PY{o}{.}\PY{n}{save}\PY{p}{(}\PY{n}{mapFname}\PY{p}{)}
+
+\PY{n}{mapUrl} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{file://}\PY{l+s+si}{\PYZob{}0\PYZcb{}}\PY{l+s+s1}{/}\PY{l+s+si}{\PYZob{}1\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{os}\PY{o}{.}\PY{n}{getcwd}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{n}{mapFname}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} download gecko driver for firefox from here \PYZhy{} https://github.com/mozilla/geckodriver/releases}
+
+\PY{c+c1}{\PYZsh{} use selenium to save the html as png image}
+\PY{n}{driver} \PY{o}{=} \PY{n}{webdriver}\PY{o}{.}\PY{n}{Firefox}\PY{p}{(}\PY{p}{)}
+\PY{n}{driver}\PY{o}{.}\PY{n}{get}\PY{p}{(}\PY{n}{mapUrl}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} wait for 5 seconds for the maps and other assets to be loaded in the browser}
+\PY{n}{time}\PY{o}{.}\PY{n}{sleep}\PY{p}{(}\PY{l+m+mi}{5}\PY{p}{)}
+\PY{n}{driver}\PY{o}{.}\PY{n}{save\PYZus{}screenshot}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{inexpensive\PYZus{}homes\PYZus{}map.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{driver}\PY{o}{.}\PY{n}{quit}\PY{p}{(}\PY{p}{)}
+
+\PY{n}{display}\PY{o}{.}\PY{n}{Image}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{inexpensive\PYZus{}homes\PYZus{}map.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+ 
+            
+\prompt{Out}{outcolor}{85}{}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_64_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+
+    Least expensive houses are located in southern suburbs close to Tacoma.
+There are probably other details such as: schools, \ldots. that are not
+available in the dataset, that could explain the concentration south of
+Seattle. We will retain latitude as a feature when we develop our model.
+And discard longitude.
+
+    \hypertarget{model-development}{%
+\section{Model Development}\label{model-development}}
+
+    \hypertarget{preliminary-stage.}{%
+\subsection{Preliminary stage.}\label{preliminary-stage.}}
+
+    \hypertarget{longitude}{%
+\paragraph{Longitude}\label{longitude}}
+
+We look at single feature at the moment. First a feature weakly
+correlated with prices: longitude, We can Fit a linear regression model
+using the longitude feature `long' and calculate the R\^{}2.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{86}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}
+\PY{n}{Y} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{price}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\PY{n}{lm} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}
+\PY{n}{lm}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X}\PY{p}{,}\PY{n}{Y}\PY{p}{)}
+\PY{n}{y\PYZus{}pred}\PY{o}{=} \PY{n}{lm}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R}\PY{l+s+se}{\PYZbs{}N\PYZob{}SUPERSCRIPT TWO\PYZcb{}}\PY{l+s+s2}{=}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{lm}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{Y}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+R²= 0.00046769430149007363
+    \end{Verbatim}
+
+    R² is close to 0 and confirms previous results (correlation) and
+observations with the interactive map. We can visualize the lack of
+correlation price v. longitude.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{87}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}import matplotlib.pyplot as plt}
+\PY{n}{sns}\PY{o}{.}\PY{n}{set\PYZus{}style}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ticks}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{axes.grid}\PY{l+s+s1}{\PYZsq{}} \PY{p}{:} \PY{k+kc}{True}\PY{p}{\PYZcb{}}\PY{p}{)}
+\PY{n}{sns}\PY{o}{.}\PY{n}{set\PYZus{}theme}\PY{p}{(}\PY{n}{color\PYZus{}codes}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{sns}\PY{o}{.}\PY{n}{set}\PY{p}{(}\PY{n}{font\PYZus{}scale} \PY{o}{=} \PY{l+m+mf}{1.25}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{9}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ticklabel\PYZus{}format}\PY{p}{(}\PY{n}{style}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{plain}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{n}{p}\PY{o}{=}\PY{n}{sns}\PY{o}{.}\PY{n}{regplot}\PY{p}{(}\PY{n}{x}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{long}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{price}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{data}\PY{o}{=}\PY{n}{df}\PY{p}{,} \PY{n}{order}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{+}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{y}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{y\PYZus{}pred}\PY{p}{,}  \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{r}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+\PY{n}{p}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{longitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{p}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{price US\PYZdl{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{87}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+Text(0, 0.5, 'price US\$')
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_71_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Longitude refers to various areas of the city of Seattle. But this
+feature is poorly correlated with house prices. A classification of
+houses per neighborhoods in the county, would be more useful. Although
+zipcode does not seem to help much, correlation is even weaker and
+negative. Further analysis is required in terms of houses price per
+neighborhood. { Longitude has little effect, probably because most
+houses are in the Seattle area. Latitude has a stronger influence. Based
+on localized areas with high prices on the map, we should create a
+(long, lat) feature. }
+
+    \hypertarget{square-ft-living}{%
+\paragraph{Square ft living}\label{square-ft-living}}
+
+Based on the correlation Table, price should be significantly correlated
+with `sqft\_living'. Fit a linear regression model to predict the
+`price' using the feature `sqft\_living' then calculate the R\^{}2.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{88}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X2} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{sqft\PYZus{}living}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}
+\PY{c+c1}{\PYZsh{}Y = df[\PYZsq{}price\PYZsq{}]}
+\PY{n}{lm2} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}
+\PY{n}{lm2}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X2}\PY{p}{,}\PY{n}{Y}\PY{p}{)}
+\PY{n}{y\PYZus{}pred}\PY{o}{=} \PY{n}{lm2}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X2}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R}\PY{l+s+se}{\PYZbs{}N\PYZob{}SUPERSCRIPT TWO\PYZcb{}}\PY{l+s+s2}{=}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{lm2}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{X2}\PY{p}{,} \PY{n}{Y}\PY{p}{)}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{}import matplotlib.pyplot as plt}
+\PY{n}{sns}\PY{o}{.}\PY{n}{set\PYZus{}style}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ticks}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{axes.grid}\PY{l+s+s1}{\PYZsq{}} \PY{p}{:} \PY{k+kc}{True}\PY{p}{\PYZcb{}}\PY{p}{)}
+\PY{n}{sns}\PY{o}{.}\PY{n}{set\PYZus{}theme}\PY{p}{(}\PY{n}{color\PYZus{}codes}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{sns}\PY{o}{.}\PY{n}{set}\PY{p}{(}\PY{n}{font\PYZus{}scale} \PY{o}{=} \PY{l+m+mf}{1.25}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{9}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ticklabel\PYZus{}format}\PY{p}{(}\PY{n}{style}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{plain}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{n}{p}\PY{o}{=}\PY{n}{sns}\PY{o}{.}\PY{n}{regplot}\PY{p}{(}\PY{n}{x}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{sqft\PYZus{}living}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{price}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{data}\PY{o}{=}\PY{n}{df}\PY{p}{,} \PY{n}{order}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{+}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{c}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{X2}\PY{p}{,} \PY{n}{y\PYZus{}pred}\PY{p}{,}  \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{r}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+\PY{n}{p}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{longitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{p}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{price US\PYZdl{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+R²= 0.4928532179037931
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{88}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+Text(0, 0.5, 'price US\$')
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_74_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{89}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X2} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{sqft\PYZus{}living}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}
+\PY{c+c1}{\PYZsh{}Y = df[\PYZsq{}price\PYZsq{}]}
+
+\PY{n}{poly} \PY{o}{=} \PY{n}{PolynomialFeatures}\PY{p}{(}\PY{n}{degree} \PY{o}{=} \PY{l+m+mi}{2}\PY{p}{)} 
+\PY{n}{Xpf2} \PY{o}{=} \PY{n}{poly}\PY{o}{.}\PY{n}{fit\PYZus{}transform}\PY{p}{(}\PY{n}{X2}\PY{p}{)}
+\PY{n}{lm2} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}
+\PY{n}{lm2}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{Xpf2}\PY{p}{,}\PY{n}{Y}\PY{p}{)}
+\PY{n}{y\PYZus{}pred}\PY{o}{=} \PY{n}{lm2}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{Xpf2}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R}\PY{l+s+se}{\PYZbs{}N\PYZob{}SUPERSCRIPT TWO\PYZcb{}}\PY{l+s+s2}{=}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{lm2}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{Xpf2}\PY{p}{,} \PY{n}{Y}\PY{p}{)}\PY{p}{)}
+\PY{n}{sns}\PY{o}{.}\PY{n}{set\PYZus{}style}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ticks}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{axes.grid}\PY{l+s+s1}{\PYZsq{}} \PY{p}{:} \PY{k+kc}{True}\PY{p}{\PYZcb{}}\PY{p}{)}
+\PY{n}{sns}\PY{o}{.}\PY{n}{set\PYZus{}theme}\PY{p}{(}\PY{n}{color\PYZus{}codes}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{sns}\PY{o}{.}\PY{n}{set}\PY{p}{(}\PY{n}{font\PYZus{}scale} \PY{o}{=} \PY{l+m+mf}{1.25}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{9}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ticklabel\PYZus{}format}\PY{p}{(}\PY{n}{style}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{plain}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}}
+\PY{n}{p}\PY{o}{=}\PY{n}{sns}\PY{o}{.}\PY{n}{regplot}\PY{p}{(}\PY{n}{x}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{sqft\PYZus{}living}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{price}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{data}\PY{o}{=}\PY{n}{df}\PY{p}{,} \PY{n}{order}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{+}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{m}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{X2}\PY{p}{,} \PY{n}{y\PYZus{}pred}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r*}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}}
+\PY{n}{p}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{longitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{p}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{price US\PYZdl{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+R²= 0.5327430940591443
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{89}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+Text(0, 0.5, 'price US\$')
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_75_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{90}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X2} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{sqft\PYZus{}living}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}
+\PY{c+c1}{\PYZsh{}Y = df[\PYZsq{}price\PYZsq{}]}
+
+\PY{n}{poly} \PY{o}{=} \PY{n}{PolynomialFeatures}\PY{p}{(}\PY{n}{degree} \PY{o}{=} \PY{l+m+mi}{3}\PY{p}{)} 
+\PY{n}{Xpf2} \PY{o}{=} \PY{n}{poly}\PY{o}{.}\PY{n}{fit\PYZus{}transform}\PY{p}{(}\PY{n}{X2}\PY{p}{)}
+\PY{n}{lm2} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}
+\PY{n}{lm2}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{Xpf2}\PY{p}{,}\PY{n}{Y}\PY{p}{)}
+\PY{n}{y\PYZus{}pred}\PY{o}{=} \PY{n}{lm2}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{Xpf2}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R}\PY{l+s+se}{\PYZbs{}N\PYZob{}SUPERSCRIPT TWO\PYZcb{}}\PY{l+s+s2}{=}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{lm2}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{Xpf2}\PY{p}{,} \PY{n}{Y}\PY{p}{)}\PY{p}{)}
+\PY{n}{sns}\PY{o}{.}\PY{n}{set\PYZus{}style}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ticks}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{axes.grid}\PY{l+s+s1}{\PYZsq{}} \PY{p}{:} \PY{k+kc}{True}\PY{p}{\PYZcb{}}\PY{p}{)}
+\PY{n}{sns}\PY{o}{.}\PY{n}{set\PYZus{}theme}\PY{p}{(}\PY{n}{color\PYZus{}codes}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{sns}\PY{o}{.}\PY{n}{set}\PY{p}{(}\PY{n}{font\PYZus{}scale} \PY{o}{=} \PY{l+m+mf}{1.25}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{9}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ticklabel\PYZus{}format}\PY{p}{(}\PY{n}{style}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{plain}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}}
+\PY{n}{p}\PY{o}{=}\PY{n}{sns}\PY{o}{.}\PY{n}{regplot}\PY{p}{(}\PY{n}{x}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{sqft\PYZus{}living}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{price}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{data}\PY{o}{=}\PY{n}{df}\PY{p}{,} \PY{n}{order}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{+}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{g}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{X2}\PY{p}{,} \PY{n}{y\PYZus{}pred}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r*}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}}
+\PY{n}{p}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{longitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{p}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{price US\PYZdl{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+R²= 0.5390045510503199
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{90}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+Text(0, 0.5, 'price US\$')
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_76_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    ``sqft\_living'' and related surface areas features are strongly
+correlated with house prices. Polynomial interpolation of order 2 is a
+better fit on this feature. Order 3 does not improve the score. And may
+lead to over-fitting. ---- Given the importance of ``sqft\_living'' and
+other dependent ``sqft'' features on home price, in fitting a regression
+with multiple features, we expect polynomial interpolation of order 2 to
+be more efficient than pure linear regression.
+
+    \hypertarget{fitting-linear-model-regression-with-multiple-features}{%
+\subsection{Fitting linear model regression with multiple
+features}\label{fitting-linear-model-regression-with-multiple-features}}
+
+    Fit a linear regression model to predict the `price' using the list of
+features with most correlated with prices in correlation Table :
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{91}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{features} \PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{floors}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{waterfront}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{lat}\PY{l+s+s2}{\PYZdq{}} \PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{bedrooms}\PY{l+s+s2}{\PYZdq{}} \PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{sqft\PYZus{}basement}\PY{l+s+s2}{\PYZdq{}} \PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{view}\PY{l+s+s2}{\PYZdq{}} \PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{bathrooms}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{sqft\PYZus{}living15}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{sqft\PYZus{}above}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{grade}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{sqft\PYZus{}living}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}     
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{polynomial-regression}{%
+\subsubsection{Polynomial regression}\label{polynomial-regression}}
+
+Linear regression model with Polynomial interpolation We test: Order 1
+(linear), 2, 3, 4 . We define PipeLines, including ``features scaling'',
+polynomial interpolation order from 1 to 4, and a Linear regression
+model.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{92}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{Input}\PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{empty}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{n+nb}{list}\PY{p}{)}
+
+\PY{k}{for} \PY{n}{j} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{)} \PY{p}{:}
+     \PY{n}{Input}\PY{p}{[}\PY{n}{j}\PY{p}{]}\PY{o}{=}\PY{p}{[}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scale}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{StandardScaler}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{,}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{polynomial}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{PolynomialFeatures}\PY{p}{(}\PY{n}{j}\PY{p}{,}\PY{n}{include\PYZus{}bias}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{p}{)}\PY{p}{,}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{model}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Use the list to create a pipeline object to predict the `price', fit the
+object using the features in the list features, and calculate the
+R\^{}2. As we increase the order of the polynomial, computation time
+becomes prohibitive.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{93}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X\PYZus{}feat} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{features}\PY{p}{]}
+
+\PY{k}{for} \PY{n}{j} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{)}\PY{p}{:}
+    \PY{n}{pipe\PYZus{}line}\PY{o}{=}\PY{n}{Pipeline}\PY{p}{(}\PY{n}{Input}\PY{p}{[}\PY{n}{j}\PY{p}{]}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{}print(pipe\PYZus{}line)}
+    \PY{n}{pipe\PYZus{}line}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}feat}\PY{p}{,}\PY{n}{Y}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Regresion Order:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{j} \PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ R}\PY{l+s+se}{\PYZbs{}N\PYZob{}SUPERSCRIPT TWO\PYZcb{}}\PY{l+s+s2}{=}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{pipe\PYZus{}line}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{X\PYZus{}feat}\PY{p}{,}\PY{n}{Y}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Regresion Order: 1  R²= 0.657626396659731
+Regresion Order: 2  R²= 0.7513404101380663
+Regresion Order: 3  R²= 0.8141672842838007
+Regresion Order: 4  R²= 0.8562565267209652
+    \end{Verbatim}
+
+    After scaling, increasing the order of the polynomial, significantly
+improves the fit. This does not guarantee that the model will properly
+fit new data. As we see in the next section.
+
+    \hypertarget{polynomial-regression---model-evaluation-and-refinement}{%
+\subsection{Polynomial Regression - Model Evaluation and
+Refinement}\label{polynomial-regression---model-evaluation-and-refinement}}
+
+    In this section we split the dataset in Training and Testing sets for
+validating the accuracy of the best model.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{94}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k+kn}{import} \PY{n}{cross\PYZus{}val\PYZus{}score}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k+kn}{import} \PY{n}{train\PYZus{}test\PYZus{}split}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{95}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{features}\PY{p}{]}
+\PY{n}{Y} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{price}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\PY{n}{x\PYZus{}train}\PY{p}{,} \PY{n}{x\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{Y}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.2}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{13}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{number of test samples:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{x\PYZus{}test}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{number of training samples:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{x\PYZus{}train}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+number of test samples: 4323
+number of training samples: 17290
+    \end{Verbatim}
+
+    \hypertarget{polynomial-regression-order-2-and-3}{%
+\subsubsection{Polynomial regression order 2 and
+3}\label{polynomial-regression-order-2-and-3}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{96}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn} \PY{k+kn}{import} \PY{n}{preprocessing}
+\PY{c+c1}{\PYZsh{}transform = preprocessing.StandardScaler()}
+\PY{n}{X} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{features}\PY{p}{]}
+\PY{n}{Y} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{price}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\PY{c+c1}{\PYZsh{}Xt = transform.fit\PYZus{}transform(X)}
+\PY{c+c1}{\PYZsh{}x\PYZus{}train, x\PYZus{}test, y\PYZus{}train, y\PYZus{}test = train\PYZus{}test\PYZus{}split(Xt, Y, test\PYZus{}size=0.2, random\PYZus{}state=13)}
+
+
+\PY{n}{poly2} \PY{o}{=} \PY{n}{PolynomialFeatures}\PY{p}{(}\PY{n}{degree} \PY{o}{=} \PY{l+m+mi}{2}\PY{p}{)} 
+\PY{n}{Xpf2} \PY{o}{=} \PY{n}{poly2}\PY{o}{.}\PY{n}{fit\PYZus{}transform}\PY{p}{(}\PY{n}{X}\PY{p}{)}
+
+\PY{n}{x\PYZus{}train}\PY{p}{,} \PY{n}{x\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}\PY{n}{Xpf2}\PY{p}{,} \PY{n}{Y}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.2}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{13}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{97}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{model} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)} 
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{98}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{x\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}
+\PY{n}{expected\PYZus{}y}  \PY{o}{=} \PY{n}{y\PYZus{}test}
+\PY{n}{predicted\PYZus{}y} \PY{o}{=} \PY{n}{model}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{x\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{99}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{model}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{x\PYZus{}test}\PY{p}{,}\PY{n}{y\PYZus{}test}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+0.7492502664714935
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{100}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{poly3} \PY{o}{=} \PY{n}{PolynomialFeatures}\PY{p}{(}\PY{n}{degree} \PY{o}{=} \PY{l+m+mi}{3}\PY{p}{)} 
+\PY{n}{Xpf3} \PY{o}{=} \PY{n}{poly3}\PY{o}{.}\PY{n}{fit\PYZus{}transform}\PY{p}{(}\PY{n}{X}\PY{p}{)}
+\PY{n}{x\PYZus{}train}\PY{p}{,} \PY{n}{x\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}\PY{n}{Xpf3}\PY{p}{,} \PY{n}{Y}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.2}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{13}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{101}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{x\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}
+\PY{n}{expected\PYZus{}y}  \PY{o}{=} \PY{n}{y\PYZus{}test}
+\PY{n}{predicted\PYZus{}y} \PY{o}{=} \PY{n}{model}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{x\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{102}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{model}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{x\PYZus{}test}\PY{p}{,}\PY{n}{y\PYZus{}test}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+0.655739446361362
+    \end{Verbatim}
+
+    order= 3: degrades the performance of the regression model. From order=4
+the polynomial transform does not allow a proper fit on the test set.
+Which means that we over-fitted the training set.
+
+    \hypertarget{ridge-regression-order-2-3.}{%
+\subsubsection{Ridge regression order 2,
+3.}\label{ridge-regression-order-2-3.}}
+
+Will adding regularization to higher order transform improve accuracy ?
+
+Initial method in IBM project was a Ridge regression for improving
+previous results with porder=2. Create and fit a Ridge regression object
+using the training data, set the regularization parameter to 0.1, and
+calculate the R\^{}2 using the test data. Linear least squares with l2
+regularization. Minimizes the objective function: \textbar\textbar y -
+Xw\textbar\textbar\^{}2\_2 + alpha *
+\textbar\textbar w\textbar\textbar\^{}2\_2\\
+This model solves a regression model where the loss function is the
+linear least squares function and regularization is given by the
+l2-norm. Also known as Ridge Regression or Tikhonov regularization. This
+estimator has built-in support for multi-variate regression (i.e., when
+y is a 2d-array of shape (n\_samples, n\_targets)).
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{103}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{linear\PYZus{}model} \PY{k+kn}{import} \PY{n}{Ridge}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{104}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{features}\PY{p}{]}
+\PY{n}{Y} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{price}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+
+\PY{n}{poly} \PY{o}{=} \PY{n}{PolynomialFeatures}\PY{p}{(}\PY{n}{degree} \PY{o}{=} \PY{l+m+mi}{2}\PY{p}{)} 
+\PY{n}{X} \PY{o}{=} \PY{n}{poly}\PY{o}{.}\PY{n}{fit\PYZus{}transform}\PY{p}{(}\PY{n}{X}\PY{p}{)}
+
+\PY{n}{x\PYZus{}train}\PY{p}{,} \PY{n}{x\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{Y}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.2}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{13}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{105}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{ridge\PYZus{}model} \PY{o}{=} \PY{n}{Ridge}\PY{p}{(}\PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.25}\PY{p}{)} 
+\PY{n}{ridge\PYZus{}model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{x\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}
+\PY{n}{ridge\PYZus{}model}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{x\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R}\PY{l+s+se}{\PYZbs{}N\PYZob{}SUPERSCRIPT TWO\PYZcb{}}\PY{l+s+s2}{=}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{ridge\PYZus{}model}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{x\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+R²= 0.7340742546019136
+    \end{Verbatim}
+
+    Regularization does not help with order 2 polynomial interpolation and
+order 3 overfitting.
+
+    \hypertarget{spline-regression-model}{%
+\subsubsection{Spline Regression Model}\label{spline-regression-model}}
+
+    Spline interpolation : This is the simple approach to model non-linear
+relationships. It add polynomial terms or quadratic terms (square,
+cubes, etc) to a regression. Spline regression. Fits a smooth curve with
+a series of polynomial segments. The values delimiting the spline
+segments are called Knots. Several parameters ``n\_knots'', ``alpha'' can
+improve previous polynomial regression. We present the best result.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{106}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{features}\PY{p}{]}
+\PY{n}{Y} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{price}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+
+\PY{n}{x\PYZus{}train}\PY{p}{,} \PY{n}{x\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{Y}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.2}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{13}\PY{p}{)}
+
+\PY{n}{model\PYZus{}spline} \PY{o}{=} \PY{n}{make\PYZus{}pipeline}\PY{p}{(}\PY{n}{SplineTransformer}\PY{p}{(}\PY{n}{n\PYZus{}knots}\PY{o}{=}\PY{l+m+mi}{6}\PY{p}{,} \PY{n}{degree}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{)}\PY{p}{,} \PY{n}{Ridge}\PY{p}{(}\PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}3}\PY{p}{)}\PY{p}{)}
+\PY{n}{model\PYZus{}spline}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{x\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{106}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+Pipeline(steps=[('splinetransformer', SplineTransformer(n\_knots=6)),
+                ('ridge', Ridge(alpha=0.001))])
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{107}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R}\PY{l+s+se}{\PYZbs{}N\PYZob{}SUPERSCRIPT TWO\PYZcb{}}\PY{l+s+s2}{=}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{model\PYZus{}spline}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{x\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+R²= 0.7908562522533551
+    \end{Verbatim}
+
+    Spline interpolation has improved the accuracy of the model. From $R^{2}=
+0.75$ to $R^{2}= 0.79$
+
+    \hypertarget{conclusions}{%
+\section{CONCLUSIONS}\label{conclusions}}
+
+    A regression model with proper interpolation is capable of predicting
+the price of homes based after multiple features (11) selected among the
+most relevant ones in the ``Price v. Features'' correlation table. The
+feature set covers six out of eight critical factors influencing a
+home's value described in the introduction. We tested several methods,
+with polynomial interpolation having increasing order. Regression with
+polynomial interpolation of order 2 proved to be the best compromise. We
+were able to improve the model further by using a spline interpolation
+with order =3. Regarding the two missing critical factors: interest
+rates, global economic environment. Overall, the dataset includes home
+sold between May 2014 and May 2015, these factors did not change much
+during that time frame, home prices had a linear evolution until 2019.
+Nevertheless, home prices evolution was exponential after 2019 due to
+low interest rates and monetary creation. These features are not
+reflected in the dataset. Which would force a regular update of the
+model. Or an inclusion of features ``Interest rates'', ``Money
+creation''.
+
+    In general, Linear regression with polynomial interpolation or
+polynomial regression, is sensitive to outliers. We tried to remove some
+of them, without targeting a particular feature. The method did not
+improve accuracy, even with a spline interpolation. The ``outlier
+method'' could be refined by targeting specific features, like
+``waterfront'' for example. This could be investigated in future
+development.
+
+   
+© IBM Corporation 2020. All rights reserved.
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}
