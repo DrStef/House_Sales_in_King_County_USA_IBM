@@ -14,7 +14,7 @@ https://github.com/DrStef/House_Sales_in_King_County_USA_IBM/blob/main/Project_H
 
 ### Version with no interactive map.  
 
-Version for LateX report and PDF document.   Project_House_Sales_in_King_County_USA_v003_LTX.ipynb 
+Version for LateX report and PDF document.
 
 https://github.com/DrStef/House_Sales_in_King_County_USA_IBM/blob/main/Project_House_Sales_in_King_County_USA_v003_LTX.ipynb
 
