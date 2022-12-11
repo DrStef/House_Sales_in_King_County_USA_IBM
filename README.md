@@ -7,14 +7,14 @@
 
 ### Version with Folium Interactive map
 
-Use Google Colab or import the Notebook and execute all cells locally
+$\textcolor{#246EAA}{\textsf{Import the Notebook and execute all cells locally.}}$   
 
 https://github.com/DrStef/House_Sales_in_King_County_USA_IBM/blob/main/Project_House_Sales_in_King_County_USA_v003.ipynb
 
 
 ### Version with no interactive map.  
 
-Version for LateX report and PDF document.
+$\textcolor{#246EAA}{\textsf{Version for LateX report and PDF document.}}$
 
 https://github.com/DrStef/House_Sales_in_King_County_USA_IBM/blob/main/Project_House_Sales_in_King_County_USA_v003_LTX.ipynb
 
