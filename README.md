@@ -5,18 +5,18 @@
  $\textcolor{#246EAA}{\textsf{This project is part of IBM Data Science certificate. We reviewed it and improved it in August 2022.}}$ </p>
 
 
-### Version with Folium Interactive map
+### <ul>  Version with Folium Interactive map.  </ul>
 
-$\textcolor{#246EAA}{\textsf{Import the Notebook and execute all cells locally.}}$   
+<ul> $\textcolor{#246EAA}{\textsf{Import the Notebook and execute all cells locally.}}$  </ul>   
 
-https://github.com/DrStef/House_Sales_in_King_County_USA_IBM/blob/main/Project_House_Sales_in_King_County_USA_v003.ipynb
+<ul> https://github.com/DrStef/House_Sales_in_King_County_USA_IBM/blob/main/Project_House_Sales_in_King_County_USA_v003.ipynb  </ul>   
 
 
-### Version with no interactive map.  
+### <ul> Version with no interactive map.   </ul>
 
-$\textcolor{#246EAA}{\textsf{Version for LateX report and PDF document.}}$
+<ul> $\textcolor{#246EAA}{\textsf{Version for LateX report and PDF document.}}$  </ul>
 
-https://github.com/DrStef/House_Sales_in_King_County_USA_IBM/blob/main/Project_House_Sales_in_King_County_USA_v003_LTX.ipynb
+<ul> https://github.com/DrStef/House_Sales_in_King_County_USA_IBM/blob/main/Project_House_Sales_in_King_County_USA_v003_LTX.ipynb </ul>   
 
 
 
