@@ -9,14 +9,14 @@
 
 <ul> $\textcolor{#246EAA}{\textsf{Import the Notebook and execute all cells locally.}}$  </ul>   
 
-<ul> https://github.com/DrStef/House_Sales_in_King_County_USA_IBM/blob/main/Project_House_Sales_in_King_County_USA_v003.ipynb  </ul>   
+[Jupyter Notebook](https://github.com/DrStef/House_Sales_in_King_County_USA_IBM/blob/main/Project_House_Sales_in_King_County_USA_v003.ipynb)   
 
 
 ### <ul> Version with no interactive map.   </ul>
 
 <ul> $\textcolor{#246EAA}{\textsf{Version for LateX report and PDF document.}}$  </ul>
 
-<ul> https://github.com/DrStef/House_Sales_in_King_County_USA_IBM/blob/main/Project_House_Sales_in_King_County_USA_v003_LTX.ipynb </ul>   
+[Jupyter Notebook](https://github.com/DrStef/House_Sales_in_King_County_USA_IBM/blob/main/Project_House_Sales_in_King_County_USA_v003_LTX.ipynb)  
 
 
 
